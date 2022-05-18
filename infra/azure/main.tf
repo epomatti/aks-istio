@@ -60,6 +60,8 @@ resource "azurerm_kubernetes_cluster" "default" {
   dns_prefix          = "aks-${local.app}"
   node_resource_group = "rg-k8s-istiodemo"
 
+  # sku_tier 
+
   default_node_pool {
     name       = "default"
     node_count = var.aks_node_count
