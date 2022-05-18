@@ -52,6 +52,17 @@ provider "helm" {
   }
 }
 
+resource "kubernetes_labels" "default_istio_injection" {
+  api_version = "v1"
+  kind        = "Namespace"
+  metadata {
+    name = "default"
+  }
+  labels = {
+    "istio-injection" = "enabled"
+  }
+}
+
 resource "kubernetes_namespace" "istio_system" {
   metadata {
     name = "istio-system"
@@ -86,9 +97,31 @@ resource "helm_release" "istiod" {
   ]
 }
 
-resource "helm_release" "istio_ingress" {
+# resource "helm_release" "istio_ingress" {
+#   name       = "istio-ingress"
+#   chart      = "gateway"
+#   repository = local.istio_charts
+#   namespace  = kubernetes_namespace.istio_ingress.metadata[0].name
+
+#   depends_on = [
+#     helm_release.istiod
+#   ]
+# }
+
+resource "helm_release" "istio_gateways_egress" {
+  name       = "istio-egress"
+  chart      = "gateways/egress"
+  repository = local.istio_charts
+  namespace  = kubernetes_namespace.istio_ingress.metadata[0].name
+
+  depends_on = [
+    helm_release.istiod
+  ]
+}
+
+resource "helm_release" "istio_gateways_ingress" {
   name       = "istio-ingress"
-  chart      = "gateway"
+  chart      = "gateways/ingress"
   repository = local.istio_charts
   namespace  = kubernetes_namespace.istio_ingress.metadata[0].name
 
