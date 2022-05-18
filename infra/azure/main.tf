@@ -28,7 +28,7 @@ variable "location" {
 variable "aks_vm_size" {
   description = "Kubernetes VM size."
   type        = string
-  default     = "Standard_B2s"
+  default     = "Standard_B2ms"
 }
 
 variable "aks_node_count" {
@@ -46,7 +46,7 @@ locals {
 ### Resource Group
 
 resource "azurerm_resource_group" "default" {
-  name     = "rg-istodemo"
+  name     = "rg-istiodemo"
   location = var.location
 }
 
