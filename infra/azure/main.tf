@@ -79,9 +79,9 @@ resource "azurerm_kubernetes_cluster" "default" {
     vm_size    = var.aks_vm_size
   }
 
-  oms_agent {
-    log_analytics_workspace_id = azurerm_log_analytics_workspace.default.id
-  }
+  # oms_agent {
+  #   log_analytics_workspace_id = azurerm_log_analytics_workspace.default.id
+  # }
 
   identity {
     type = "SystemAssigned"
