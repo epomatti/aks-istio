@@ -51,6 +51,17 @@ resource "azurerm_resource_group" "default" {
 }
 
 
+### Log Analytics
+
+# resource "azurerm_log_analytics_workspace" "default" {
+#   name                = "log-myapp"
+#   resource_group_name = azurerm_resource_group.default.name
+#   location            = azurerm_resource_group.default.location
+#   sku                 = "PerGB2018"
+#   retention_in_days   = 30
+# }
+
+
 ### Kubernetes Cluster
 
 resource "azurerm_kubernetes_cluster" "default" {
@@ -68,6 +79,10 @@ resource "azurerm_kubernetes_cluster" "default" {
     vm_size    = var.aks_vm_size
   }
 
+  oms_agent {
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.default.id
+  }
+
   identity {
     type = "SystemAssigned"
   }
@@ -79,3 +94,51 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
 }
+
+
+# resource "azurerm_monitor_diagnostic_setting" "application_gateway" {
+#   name                       = "Application Gateway Logs"
+#   target_resource_id         = azurerm_kubernetes_cluster.default.ingress_application_gateway[0].effective_gateway_id
+#   log_analytics_workspace_id = var.log_analytics_workspace_id
+
+#   log {
+#     category = "ApplicationGatewayAccessLog"
+#     enabled  = true
+
+#     retention_policy {
+#       days    = 7
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "ApplicationGatewayPerformanceLog"
+#     enabled  = true
+
+#     retention_policy {
+#       days    = 7
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "ApplicationGatewayFirewallLog"
+#     enabled  = true
+
+#     retention_policy {
+#       days    = 7
+#       enabled = true
+#     }
+#   }
+
+#   metric {
+#     category = "AllMetrics"
+#     enabled  = true
+
+#     retention_policy {
+#       days    = 7
+#       enabled = true
+#     }
+#   }
+
+# }
