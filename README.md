@@ -1,35 +1,24 @@
 # AKS Istio Sandbox
 
+To install Azure resources and Helm charts (repeat for each one):
 
 ```bash
 terraform init
 terraform apply -auto-approve
 ```
 
-clone istio cli
+Connect to AKS:
 
-
-
+```bash
 az aks get-credentials -n aks-myapp -g rg-istiodemo
+```
 
+Clone Istioctl and apply the BookInfo manifests:
 
 
 ```bash
 kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
-```
-
-
-
-```bash
-kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
-```
-
-```bash
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/networking/bookinfo-gateway.yaml
-```
-
-```bash
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/networking/bookinfo-gateway.yaml
+kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml
 ```
 
 ```
