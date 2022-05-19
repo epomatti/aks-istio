@@ -97,9 +97,20 @@ resource "helm_release" "istiod" {
   ]
 }
 
-# resource "helm_release" "istio_ingress" {
-#   name       = "istio-ingress"
-#   chart      = "gateway"
+resource "helm_release" "istio_ingress" {
+  name       = "istio-ingressgateway"
+  chart      = "gateway"
+  repository = local.istio_charts
+  namespace  = kubernetes_namespace.istio_ingress.metadata[0].name
+
+  depends_on = [
+    helm_release.istiod
+  ]
+}
+
+# resource "helm_release" "istio_gateways_egress" {
+#   name       = "istio-egress"
+#   chart      = "gateways/istio-egress"
 #   repository = local.istio_charts
 #   namespace  = kubernetes_namespace.istio_ingress.metadata[0].name
 
@@ -108,24 +119,13 @@ resource "helm_release" "istiod" {
 #   ]
 # }
 
-resource "helm_release" "istio_gateways_egress" {
-  name       = "istio-egress"
-  chart      = "gateways/egress"
-  repository = local.istio_charts
-  namespace  = kubernetes_namespace.istio_ingress.metadata[0].name
+# resource "helm_release" "istio_gateways_ingress" {
+#   name       = "istio-ingress"
+#   chart      = "gateways/istio-ingress"
+#   repository = local.istio_charts
+#   namespace  = kubernetes_namespace.istio_ingress.metadata[0].name
 
-  depends_on = [
-    helm_release.istiod
-  ]
-}
-
-resource "helm_release" "istio_gateways_ingress" {
-  name       = "istio-ingress"
-  chart      = "gateways/ingress"
-  repository = local.istio_charts
-  namespace  = kubernetes_namespace.istio_ingress.metadata[0].name
-
-  depends_on = [
-    helm_release.istiod
-  ]
-}
+#   depends_on = [
+#     helm_release.istiod
+#   ]
+# }
